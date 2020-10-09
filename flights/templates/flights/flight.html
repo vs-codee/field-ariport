@@ -1,0 +1,170 @@
+{% extends 'flights/basic.html'%}
+{%block css%}
+<style>   
+    .name
+    {
+        font-size: 20px;
+        font-family: monospace;
+    }
+    #heading
+    {
+        font-size: 30px;
+        padding: 20px;
+    }
+    #passenger
+    {
+        font-size: 40px;
+    }
+    #button
+    {
+        border: 2px solid brown;
+        /* margin-left: 644px; */
+        border-radius: 50px;
+        height: 40px;
+        font-size: 20px;
+        margin-top: 30px;
+    }
+    #button:hover
+    {
+        background-color: darkgray;
+    }
+    .data
+    {
+        font-weight: bold;
+    }
+        
+</style>
+
+{%endblock%}
+
+{%block body%}
+<div class="row">
+    <div class="col-md-6">
+        <div id="heading">Flight Details</div>
+        <table class="table details table-striped table-hover container" style="width: 400px;">
+            <tr>
+                <td class="data">
+                    ID
+                </td>
+                <td >
+                    {{flight.id}}
+                </td>
+            </tr>
+            <tr>
+                <td class="data">
+                    Origin
+                </td>
+                <td>
+                    {{flight.origin}}
+                </td>
+            </tr>
+            <tr>
+                <td class="data">
+                    Destination
+                </td>
+                <td>
+                    {{flight.destination}}
+                </td>
+            </tr>
+            <tr>
+                <td class="data">
+                    Duration
+                </td>
+                <td>
+                    {{flight.duration}}
+                </td>
+            </tr>
+        </table>
+
+
+        <div id="heading">List of Passengers in the Flight</div>
+        <table class="table table-striped table-hover container" style="width: 500px;">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Details</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for i in passengers %}
+              <tr>
+                <th scope="row">{{i.id}}</th>
+                <td>{{i.first}}</td>
+                <td>{{i.last}}</td>
+                <td>#nothing</td>
+              </tr>
+              {%endfor%}
+            </tbody>
+          </table>
+          <a href="{% url 'index' %}"><button id="button">Home Page</button></a>
+        </div>
+        <div class="col-md-6">
+        <div class="container my-3">
+            <div id="heading">
+                Other Passengers 
+            </div>            
+
+            <form id="myform" method="POST" action="/flights/{{flight.id}}/book">{%csrf_token%}
+                <div id="empty"></div>
+            <table class="table table-striped table-hover container" style="width: 500px;">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for i in non_passengers %}
+                  <tr>
+                    <th scope="row">{{i.id}}</th>
+                    <td>{{i.first}}</td>
+                    <td>{{i.last}}</td>
+                    <td><button type="button" onclick="addpassenger({{i.id}})" class="btn btn-dark">Add</button></td>
+                  </tr>
+                  {%endfor%}
+                </tbody>
+              </table>            
+              </form>
+            <br>
+            <button id="manualbtn" type="button" onclick="addmanually()" class="btn btn-link">Add Manually</button>
+            <form action="/flights/{{flight.id}}" method="POST" id="passenger_form" style="display: none">{%csrf_token%}
+                {{form}}
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+    </div>
+    
+</div>
+
+
+
+
+
+
+
+
+<script>
+    function addpassenger(id)
+    {
+        let input=document.createElement('input');
+        let div=document.getElementById('empty');
+        input.type='hidden';
+        input.name='passengerid';
+        input.value=id;
+        div.appendChild(input);
+        document.getElementById('myform').submit();        
+    }
+
+    function addmanually()
+    {
+        console.log("SHOW");
+        document.getElementById('manualbtn').style.display='none';
+        document.getElementById('passenger_form').style.display='block';
+    }
+
+</script>
+{%endblock%}
