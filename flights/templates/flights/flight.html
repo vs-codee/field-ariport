@@ -76,7 +76,9 @@
             </tr>
         </table>
 
-
+        <form action="{{flight.id}}/deletep" method="POST" id="delete">{%csrf_token%}
+            
+        </form>
         <div id="heading">List of Passengers in the Flight</div>
         <table class="table table-striped table-hover container" style="width: 500px;">
             <thead class="thead-dark">
@@ -84,7 +86,7 @@
                 <th scope="col">ID</th>
                 <th scope="col">First Name</th>
                 <th scope="col">Last Name</th>
-                <th scope="col">Details</th>
+                <th scope="col">Modify</th>
               </tr>
             </thead>
             <tbody>
@@ -93,14 +95,14 @@
                 <th scope="row">{{i.id}}</th>
                 <td>{{i.first}}</td>
                 <td>{{i.last}}</td>
-                <td>#nothing</td>
+                <td><button id="delete_passenger" onclick="delete_passenger({{i.id}})" type="button" class="btn btn-danger">Delete</button></td>
               </tr>
               {%endfor%}
             </tbody>
           </table>
           <a href="{% url 'index' %}"><button id="button">Home Page</button></a>
         </div>
-        <div class="col-md-6">
+    <div class="col-md-6">
         <div class="container my-3">
             <div id="heading">
                 Other Passengers 
@@ -114,7 +116,7 @@
                     <th scope="col">ID</th>
                     <th scope="col">First Name</th>
                     <th scope="col">Last Name</th>
-                    <th scope="col">Details</th>
+                    <th scope="col">Modify</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -123,7 +125,7 @@
                     <th scope="row">{{i.id}}</th>
                     <td>{{i.first}}</td>
                     <td>{{i.last}}</td>
-                    <td><button type="button" onclick="addpassenger({{i.id}})" class="btn btn-dark">Add</button></td>
+                    <td><button type="button" onclick="addpassenger({{i.id}})" class="btn btn-success">Add</button></td>
                   </tr>
                   {%endfor%}
                 </tbody>
@@ -131,11 +133,18 @@
               </form>
             <br>
             <button id="manualbtn" type="button" onclick="addmanually()" class="btn btn-link">Add Manually</button>
-            <form action="/flights/{{flight.id}}" method="POST" id="passenger_form" style="display: none">{%csrf_token%}
+            <form action="/flights/{{flight.id}}/addp" method="POST" id="passenger_form" style="display: none">{%csrf_token%}
                 {{form}}
+                <input type="hidden" name="flightid" value="{{flight.id}}">
                 <input type="submit" value="Submit">
+                                                                                
             </form>
-        </div>
+            {% if messages %}
+            {%for message in messages%}
+            <h3 style="color: red;">{{message}}</h3>
+            {%endfor%}
+            {%endif%}
+        </div>        
     </div>
     
 </div>
@@ -164,6 +173,17 @@
         console.log("SHOW");
         document.getElementById('manualbtn').style.display='none';
         document.getElementById('passenger_form').style.display='block';
+    }
+
+    function delete_passenger(id)
+    {
+        form=document.getElementById('delete');
+        input=document.createElement('input');
+        input.type="hidden";
+        input.value=`${id}`;
+        input.name="passenger_id";
+        form.appendChild(input);
+        form.submit();
     }
 
 </script>

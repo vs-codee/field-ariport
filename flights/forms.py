@@ -12,15 +12,15 @@ class passenger_form(forms.ModelForm):
         model=Passengers
         fields=['first','last']
         
-    def clean_first(self):
-        first=self.cleaned_data.get('first')
-        last=self.cleaned_data.get('last')
-        if first=="":
-            raise forms.ValidationError('This field cannot be left blank')
+    # def clean_first(self):
+    #     first=self.cleaned_data.get('first')
+    #     last=self.cleaned_data.get('last')
+    #     if first=="":
+    #         raise forms.ValidationError('This field cannot be left blank')
 
-        for instance in Passengers.object.all():
-            if instance.first==first and instance.last==last:
-                raise forms.ValidationError('This field already exists')
+    #     for instance in Passengers.object.all():
+    #         if instance.first==first and instance.last==last:
+    #             raise forms.ValidationError('This field already exists')
 
 
     

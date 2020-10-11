@@ -1,9 +1,14 @@
 {% extends 'flights/basic.html' %}
 {% block body %}
 
-<form method="POST", action="{%url 'addflight'%}">{%csrf_token%}
+<form method="POST", action="{%url 'addflight' %}">{%csrf_token%}
         {{ form.as_p}}
         <input type="submit" value="Submit">
 </form>
+{%if messages%}
+{%for message in messages %}
+<h2>{{message}}</h2>
+{%endfor%}
+{%endif %}
 
 {% endblock body %}
